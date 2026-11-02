@@ -14,7 +14,7 @@ python3 -m unittest discover -v
 
 页面早期版本保留了有意设置的视觉回归：主按钮文字与背景颜色相同，按钮文字几乎不可见。`tests/test_site.py` 会检测这个问题。该回归已修复：主按钮使用 `--ink` 文字配 `--cta`（`#58c793`）绿色背景，对比度约 7.85:1，悬停时换成 `--cta-hover`；修复前后的截图见 `docs/screenshots/`。
 
-当前演练版本有意保留一个跳转回归：点击首页“查看测试流程”按钮不能滚动到下方流程区。预期行为是和顶部“流程”链接一样到达流程区。现有链接回归测试会捕获这个问题：18 项测试中 17 项应通过，只有 `test_local_links_and_assets_exist` 失败；修复后应全部通过。按钮对比度、页面动画及 CSV 功能应保持不变。
+演练版本曾保留一个跳转回归：点击首页“查看测试流程”按钮不能滚动到下方流程区。该回归已修复：主按钮的锚点原来误写为 `#workfow`，改为与顶部“流程”链接一致的 `#workflow` 后，点击会平滑滚动到流程区。`tests/test_site.py` 的 `test_primary_action_scrolls_to_workflow_section` 会锁定这一行为，现有链接检查也会捕获错误的锚点；当前 19 项测试应全部通过。按钮对比度、页面动画及 CSV 功能保持不变，跳转前后的点击截图见 `docs/screenshots/cta-scroll-*.png`。
 
 ## GitHub Pages
 

@@ -81,6 +81,19 @@ class SiteTests(unittest.TestCase):
         ratio = contrast_ratio(*hover_colors(css))
         self.assertGreaterEqual(ratio, 4.5, "primary button hover text must reach a 4.5:1 contrast ratio")
 
+    def test_primary_action_scrolls_to_workflow_section(self):
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        target = re.search(r'class="button primary-button"[^>]*href="([^"]*)"', html)
+        if target is None:
+            target = re.search(r'href="([^"]*)"[^>]*class="button primary-button"', html)
+        self.assertIsNotNone(target, "primary action must be a link")
+        href = target.group(1)
+        self.assertTrue(href.startswith("#"), "primary action must scroll within the page")
+        page = LocalReferences()
+        page.feed(html)
+        self.assertIn(href[1:], page.ids, "primary action must target an existing section")
+        self.assertEqual(href, "#workflow", "primary action must reach the workflow section")
+
     def test_contrast_calculation(self):
         self.assertAlmostEqual(contrast_ratio("#000000", "#ffffff"), 21)
         self.assertEqual(contrast_ratio("#f6f4ee", "#f6f4ee"), 1)
