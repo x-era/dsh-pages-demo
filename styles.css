@@ -56,3 +56,109 @@ li strong { color: var(--accent-dark); }
 li span { color: var(--muted); }
 footer { max-width: 1180px; padding: 25px 32px 40px; margin: auto; border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--muted); font-size: .78rem; }
 @media (max-width: 760px) { .site-header { padding: 22px 20px; } nav a:not(.nav-link) { display: none; } main { padding: 35px 20px 70px; } .hero, .workflow { grid-template-columns: 1fr; gap: 45px; } .hero { min-height: auto; } h1 { font-size: clamp(3.6rem, 18vw, 6rem); } .hero-card { transform: none; } .feature-grid { grid-template-columns: 1fr; } .feature-grid article, .feature-grid article + article { padding: 25px 0; border-left: 0; } .workflow { padding-top: 75px; } footer { padding: 20px; gap: 20px; flex-direction: column; } }
+/* ---- Motion ------------------------------------------------------------
+   Pure-CSS motion so the page keeps working without JavaScript and the
+   Pages workflow can keep publishing only index.html and styles.css:
+   a staggered entrance for the hero, a slow ambient drift on the preview
+   card, and hover/focus feedback on links, buttons and feature cells.
+   Every animation ends on the existing layout, and the whole block is
+   gated behind prefers-reduced-motion so motion-sensitive visitors get
+   the untouched, static page. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise-in {
+    from { opacity: 0; translate: 0 16px; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+
+  @keyframes drop-in {
+    from { opacity: 0; translate: 0 -10px; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+
+  @keyframes card-in {
+    from { opacity: 0; scale: .965; }
+    to   { opacity: 1; scale: 1; }
+  }
+
+  @keyframes code-in {
+    from { opacity: 0; translate: 0 8px; }
+    to   { opacity: 1; translate: 0 0; }
+  }
+
+  @keyframes card-drift {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -6px; }
+  }
+
+  @keyframes dot-pulse {
+    0%, 100% { opacity: .55; }
+    50%      { opacity: 1; }
+  }
+
+  @keyframes spark-breathe {
+    0%, 100% { opacity: .45; }
+    50%      { opacity: 1; }
+  }
+
+  .site-header { animation: drop-in 260ms cubic-bezier(.2, .7, .2, 1) backwards; }
+  .eyebrow { animation: rise-in 240ms cubic-bezier(.2, .7, .2, 1) 30ms backwards; }
+  h1 { animation: rise-in 300ms cubic-bezier(.2, .7, .2, 1) 60ms backwards; }
+  .hero-text { animation: rise-in 280ms cubic-bezier(.2, .7, .2, 1) 100ms backwards; }
+  .hero-actions { animation: rise-in 280ms cubic-bezier(.2, .7, .2, 1) 130ms backwards; }
+  .hero-card {
+    animation:
+      card-in 320ms cubic-bezier(.2, .7, .2, 1) 90ms backwards,
+      card-drift 8s ease-in-out 800ms infinite;
+  }
+  .hero-card pre { animation: code-in 260ms cubic-bezier(.2, .7, .2, 1) 160ms backwards; }
+  .hero-card .dot { animation: dot-pulse 2.8s ease-in-out 800ms infinite; }
+  .sparkline { animation: spark-breathe 3.6s ease-in-out 800ms infinite; }
+
+  nav a { position: relative; }
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5px;
+    height: 1px;
+    background: currentColor;
+    scale: 0 1;
+    transform-origin: left center;
+    transition: scale .25s ease;
+  }
+  nav a:hover::after, nav a:focus-visible::after { scale: 1 1; }
+  nav .nav-link::after { display: none; }
+
+  nav a,
+  .button,
+  .text-link,
+  .feature-grid article,
+  li strong,
+  .feature-number {
+    transition: translate .25s ease, background-color .25s ease, color .2s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+
+  .button:hover { translate: 0 -2px; box-shadow: 0 12px 26px rgba(16, 33, 43, .18); }
+  .button:active { translate: 0 0; box-shadow: 0 4px 10px rgba(16, 33, 43, .14); }
+
+  .text-link span { display: inline-block; transition: translate .25s ease; }
+  .text-link:hover span { translate: 4px 0; }
+
+  .feature-grid article:hover { translate: 0 -3px; }
+  .feature-grid article:hover .feature-number { color: var(--accent-dark); }
+
+  li:hover strong { translate: 3px 0; }
+}
+
+/* Links get a visible focus ring; the primary button already has one. */
+.text-link:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
