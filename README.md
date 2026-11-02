@@ -14,7 +14,7 @@ python3 -m unittest discover -v
 
 页面早期版本保留了有意设置的视觉回归：主按钮文字与背景颜色相同，按钮文字几乎不可见。`tests/test_site.py` 会检测这个问题。该回归已修复：主按钮使用 `--ink` 文字配 `--cta`（`#58c793`）绿色背景，对比度约 7.85:1，悬停时换成 `--cta-hover`；修复前后的截图见 `docs/screenshots/`。
 
-当前版本的测试预期为 14 项全部通过；其中两个按钮对比度用例分别检查常态与悬停状态，均要求前景与背景的颜色对比度至少 4.5:1。其余链接、资源和 CSV 行为均应通过。
+当前版本的测试预期为 18 项全部通过；其中两个按钮对比度用例分别检查常态与悬停状态，均要求前景与背景的颜色对比度至少 4.5:1。其余链接、资源和 CSV 行为均应通过。
 
 ## GitHub Pages
 
@@ -23,6 +23,16 @@ python3 -m unittest discover -v
 在仓库 Settings → Pages 中选择 **GitHub Actions**。`.github/workflows/pages.yml` 会在 `main` 更新后发布页面，仅上传 `index.html`、`styles.css` 和 `.nojekyll`。Python 源码、测试和操作记录不会进入 Pages 发布产物。
 
 `.github/workflows/test.yml` 在 `main` 和 PR 上运行测试。初始版本的已知失败用于演示，Pages 发布与测试任务相互独立。修复通过 PR 评审并手动合并后，Pages 自动更新；当前没有配置每个 PR 的独立预览站点。
+
+## 页面动效
+
+页面动效全部由 `styles.css` 实现，不使用 JavaScript，因此 Pages 发布产物仍然只有 `index.html`、`styles.css` 和 `.nojekyll`。
+
+- 首屏入场：页头、标题、正文、按钮和预览卡片依次淡入并轻微上移，总时长约 0.4 秒。
+- 持续动效：预览卡片缓慢上下漂浮，状态圆点和迷你折线图轻微呼吸，作为页面唯一的循环动画。
+- 交互反馈：导航、主按钮、文字链接、功能卡片和流程条目在悬停时轻微位移或变色，键盘聚焦时显示可见的焦点描边。
+
+所有动效都写在 `@media (prefers-reduced-motion: no-preference)` 中；当系统开启“减少动态效果”时，页面回退为完全静态的原始版本（`scroll-behavior` 也一并改回 `auto`）。`tests/test_motion.py` 会检查这一约束，以及页面不依赖 JavaScript。动效前后的对照与入场中间帧见 `docs/screenshots/motion-*.png`。
 
 ## 接口
 
