@@ -18,7 +18,7 @@ python3 -m unittest discover -v
 
 ## GitHub Pages
 
-仓库建议名为 `dsh-pages-demo`，页面地址为 `https://OWNER.github.io/dsh-pages-demo/`，无需占用账号根站点的 `OWNER.github.io` 仓库。
+仓库为 `x-era/dsh-pages-demo`，页面地址为 `https://x-era.github.io/dsh-pages-demo/`，无需占用账号根站点的 `x-era.github.io` 仓库。初次发布完成前，这两个地址可能尚不可用。
 
 在仓库 Settings → Pages 中选择 **GitHub Actions**。`.github/workflows/pages.yml` 会在 `main` 更新后发布页面，仅上传 `index.html`、`styles.css` 和 `.nojekyll`。Python 源码、测试和操作记录不会进入 Pages 发布产物。
 
