@@ -7,21 +7,38 @@ import unittest
 ROOT = Path(__file__).parents[1]
 
 
-def primary_colors(css):
-    variables = dict(re.findall(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;", css))
-    match = re.search(r"\.primary-button\s*\{([^}]*)\}", css)
+def css_variables(css):
+    return dict(re.findall(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;", css))
+
+
+def resolve_color(css, value):
+    variables = css_variables(css)
+    var = re.fullmatch(r"var\((--[\w-]+)\)", value.strip())
+    color = variables[var.group(1)] if var else value.strip()
+    if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
+        raise ValueError(f"Unsupported color: {color}")
+    return color
+
+
+def rule_declarations(css, pattern):
+    match = re.search(pattern, css)
     if match is None:
-        raise ValueError("Missing primary button style")
-    declarations = dict(re.findall(r"(?:^|;)\s*([\w-]+)\s*:\s*([^;]+)", match.group(1)))
+        raise ValueError(f"Missing style rule: {pattern}")
+    return dict(re.findall(r"(?:^|;)\s*([\w-]+)\s*:\s*([^;]+)", match.group(1)))
 
-    def resolve(value):
-        var = re.fullmatch(r"var\((--[\w-]+)\)", value.strip())
-        color = variables[var.group(1)] if var else value.strip()
-        if not re.fullmatch(r"#[0-9a-fA-F]{6}", color):
-            raise ValueError(f"Unsupported color: {color}")
-        return color
 
-    return resolve(declarations["color"]), resolve(declarations["background"])
+def button_colors(css, selector=r"\.primary-button"):
+    declarations = rule_declarations(css, selector + r"\s*\{([^}]*)\}")
+    return resolve_color(css, declarations["color"]), resolve_color(css, declarations["background"])
+
+
+def primary_colors(css):
+    return button_colors(css)
+
+
+def hover_colors(css):
+    background = rule_declarations(css, r"\.primary-button:hover\s*\{([^}]*)\}")["background"]
+    return primary_colors(css)[0], resolve_color(css, background)
 
 
 def contrast_ratio(first, second):
@@ -58,6 +75,11 @@ class SiteTests(unittest.TestCase):
         css = (ROOT / "styles.css").read_text(encoding="utf-8")
         ratio = contrast_ratio(*primary_colors(css))
         self.assertGreaterEqual(ratio, 4.5, "primary button text must reach a 4.5:1 contrast ratio")
+
+    def test_primary_action_hover_stays_readable(self):
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        ratio = contrast_ratio(*hover_colors(css))
+        self.assertGreaterEqual(ratio, 4.5, "primary button hover text must reach a 4.5:1 contrast ratio")
 
     def test_contrast_calculation(self):
         self.assertAlmostEqual(contrast_ratio("#000000", "#ffffff"), 21)
