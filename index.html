@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A small GitHub Pages demo for the DSH Super-agent workflow.">
+    <title>DSH Pages Demo · Contact Exporter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./">DSH<span>Pages</span></a>
+      <nav aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#workflow">流程</a>
+        <a class="nav-link" href="https://github.com/">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">GITHUB PAGES · DSH SUPER-AGENT DEMO</p>
+          <h1 id="hero-title">让每次改动<br><em>都能被看见。</em></h1>
+          <p class="hero-text">一个小而完整的联系人导出器，用来演示 Issue、Agent、PR 和线上页面之间的闭环。</p>
+          <div class="hero-actions">
+            <a class="button primary-button" href="#workflow">查看测试流程</a>
+            <a class="text-link" href="#features">了解功能 <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="导出预览">
+          <div class="card-topline"><span class="dot"></span><span>contacts.csv</span><span class="card-status">READY</span></div>
+          <pre><code>name,postal_code
+Alice,02108
+Bob,94105</code></pre>
+          <div class="card-footer"><span>2 contacts</span><span class="sparkline" aria-hidden="true">▁▂▃▅▆</span></div>
+        </div>
+      </section>
+
+      <section id="features" class="feature-grid" aria-label="功能">
+        <article><span class="feature-number">01</span><h2>保留原值</h2><p>邮政编码是标识符，前导零也应原样保留。</p></article>
+        <article><span class="feature-number">02</span><h2>标准 CSV</h2><p>逗号、引号、Unicode 和换行都遵循标准转义。</p></article>
+        <article><span class="feature-number">03</span><h2>零依赖</h2><p>页面和测试只使用浏览器与 Python 标准库。</p></article>
+      </section>
+
+      <section id="workflow" class="workflow" aria-labelledby="workflow-title">
+        <div><p class="eyebrow">THE LOOP</p><h2 id="workflow-title">从 Issue 到线上页面</h2></div>
+        <ol>
+          <li><strong>Issue</strong><span>提出一个清晰、可验证的改进。</span></li>
+          <li><strong>Agent</strong><span>在独立分支修改并运行测试。</span></li>
+          <li><strong>PR</strong><span>评审改动，继续同一张工单。</span></li>
+          <li><strong>Pages</strong><span>合并后直接查看公开效果。</span></li>
+        </ol>
+      </section>
+    </main>
+
+    <footer><span>DSH Pages Demo</span><span>Built for a safe, observable workflow.</span></footer>
+  </body>
+</html>
