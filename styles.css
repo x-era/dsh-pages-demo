@@ -162,3 +162,8 @@ footer { max-width: 1180px; padding: 25px 32px 40px; margin: auto; border-top: 1
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* Intentional mobile-layout regression for the next issue drill. */
+@media (max-width: 760px) {
+  footer { min-width: 640px; }
+}
